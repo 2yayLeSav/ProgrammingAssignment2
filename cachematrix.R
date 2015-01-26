@@ -10,7 +10,7 @@ makeCacheMatrix <- function(x = matrix()) {
         }
         get <- function() x
         setrev <- function(solve) reverse <<- solve
-        getrev <- function() solve
+        getrev <- function() reverse
         list(set = set, get = get,
              setrev = setrev,
              getrev = getrev)
@@ -22,13 +22,13 @@ makeCacheMatrix <- function(x = matrix()) {
 ##inverse from the cache.
 
 cacheSolve <- function(x, ...) {
-        rev <- x$getrev()
-        if(!is.null(rev)) {
+        reverse <- makeCacheMatrix(x)$getrev()
+        if(!is.null(reverse)) {
                 message("getting cached data")
-                return(rev)
+                return(reverse)
         }
-        data <- x$get()
-        rev <- solve(data, ...)
-        x$setrev(rev)
-        rev
+        data <- makeCacheMatrix(x)$get()
+        reverse <- solve(data, ...)
+        makeCacheMatrix(x)$setrev(reverse)
+        reverse
 }
